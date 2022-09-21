@@ -1,9 +1,17 @@
-import { View, Text, SafeAreaView, Image, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Image,
+  TextInput,
+  ScrollView,
+} from "react-native";
 import React, { useLayoutEffect } from "react";
 import {
   ChevronDownIcon,
   UserIcon,
-  AdjustmentsIcon,
+  AdjustmentsVerticalIcon,
+  MagnifyingGlassIcon,
 } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 
@@ -17,9 +25,9 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView>
-      <Text className="bg-white text-red-500">
-        <View className="flex-row pb-3 items-center mx-4 space-x-2 px-2">
+    <SafeAreaView className="bg-white pt-5">
+      <View className="text-red-500">
+        <View className="flex-row pb-3 items-center mx-4 space-x-2 ">
           <Image
             source={{
               uri: "https://avatars.githubusercontent.com/u/926932?v=4",
@@ -39,7 +47,24 @@ const HomeScreen = () => {
 
           <UserIcon size={35} color="#00CCBB" />
         </View>
-      </Text>
+
+        <View className="flex-row items-center space-x-2 pb-2 mx-4 ">
+          <View className="flex-row flex-1 font-bold bg-gray-200 p-3">
+            <MagnifyingGlassIcon size={20} color="gray" />
+            <TextInput
+              placeholder="Restaurants and cuisines"
+              keyboardType="default"
+            />
+          </View>
+          <AdjustmentsVerticalIcon size={20} color="#00CCBB" />
+        </View>
+
+        {/* body */}
+        <ScrollView className="flex">
+          {/* Categories */}
+          {/* Featured rows */}
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
