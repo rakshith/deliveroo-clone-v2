@@ -6,7 +6,7 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   ChevronDownIcon,
   UserIcon,
@@ -16,16 +16,38 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Categories from "../components/Categories";
 import FeaturedRow from "../components/FeaturedRow";
+import sanityClient from "../sanity";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-
+  const [featuredCategories, setFeaturedCategories] = useState([]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []);
 
+  useEffect(() => {
+    sanityClient
+      .fetch(
+        `
+    *[_type == "featured"] {
+        ...,
+        restaurants[]->{
+          ...,
+          dishes[]->,
+          type-> {
+            name
+          }
+        }
+      }
+    `
+      )
+      .then((data) => {
+        setFeaturedCategories(data);
+      });
+  }, []);
+  //   console.log(featuredCategories);
   return (
     <SafeAreaView className="bg-white pt-5">
       <View className="flex-row pb-3 items-center mx-4 space-x-2 ">
@@ -64,13 +86,16 @@ const HomeScreen = () => {
         <Categories />
         {/* Featured rows */}
 
-        <FeaturedRow
-          id="223"
-          title="Featured"
-          description="Paid placements from our parteners"
-          featuredCategory="featured"
-        />
-        <FeaturedRow
+        {featuredCategories?.map((category) => (
+          <FeaturedRow
+            key={category._id}
+            id={category._id}
+            title={category.name}
+            description={category.short_description}
+          />
+        ))}
+
+        {/* <FeaturedRow
           id="21"
           title="Featured"
           description="Paid placements from our parteners"
@@ -87,7 +112,7 @@ const HomeScreen = () => {
           title="Featured"
           description="Paid placements from our parteners"
           featuredCategory="featured"
-        />
+        /> */}
       </ScrollView>
     </SafeAreaView>
   );
